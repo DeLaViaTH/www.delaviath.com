@@ -1,4 +1,4 @@
-﻿# Local
+# Local
 node_modules/
 .DS_Store
 Thumbs.db
@@ -6,6 +6,12 @@ Thumbs.db
 
 # Screenshot / debugging output from tools/
 _shots/
+
+# Deployment staging directory built from the repo (see README: Deploying)
+dist/
+
+# Local wrangler state written by `wrangler pages deploy`
+.wrangler/
 
 # DSH project memory store
 .dsh-project-memory/

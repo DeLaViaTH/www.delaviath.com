@@ -191,19 +191,56 @@ with `--remote-debugging-port=9222`:
 Cloudflare Pages builds straight from the `main` branch of
 [DeLaViaTH/www.delaviath.com](https://github.com/DeLaViaTH/www.delaviath.com).
 
+- **Project:** `www-delaviath-com`
 - **Build command:** *(none)*
 - **Build output directory:** `/`
 
 `_headers` and `_redirects` are picked up automatically. Old `/bmi` and
 `/bmi.html` links redirect to `/projects` — the calculator was removed.
 
+### Deploying by direct upload
+
+The Git integration depends on Cloudflare receiving GitHub webhooks. When that
+path is unavailable — GitHub incidents, an expired authorisation, or a project
+whose production deployment is stale — push to Git and upload the site directly
+instead:
+
+```sh
+git push origin main          # keep the repository truthful
+
+# Stage only what should be public; tools/, README and the build helpers
+# are not part of the site.
+mkdir -p dist
+cp -r index.html projects.html uses.html 404.html \
+      _headers _redirects robots.txt sitemap.xml LICENSE \
+      css js images assets _partials dist/
+
+npx wrangler pages deploy dist --project-name www-delaviath-com --branch main
+```
+
+Deploy to a preview branch first (`--branch preview-test`) when you want the
+real edge to check a change before it reaches the production domain; the alias
+URL (`https://preview-test.www-delaviath-com.pages.dev`) is safe to test against.
+
+Two things that only show up on the real edge, not locally:
+
+- `/_partials/*.html` answers **308** and redirects to the extensionless path.
+  `fetch()` follows it, so the shared chrome still loads, but that is why the
+  partials are fetched at runtime rather than assumed to be static.
+- Cloudflare injects its Web Analytics beacon into Pages responses, so
+  `static.cloudflareinsights.com` has to stay in `script-src` and
+  `cloudflareinsights.com` in `connect-src`, or every page logs a CSP violation.
+
 ## Conventions
 
 - Every page declares a canonical URL, an Open Graph image and a description.
 - Clean URLs only (`/projects`, not `/projects.html`); `_redirects` enforces it.
-- Third-party requests are limited to Google Fonts and the hero's YouTube embed.
+- Third-party requests are limited to Google Fonts, the hero's YouTube embed and
+  Cloudflare's own analytics beacon.
 - `prefers-reduced-motion` stops the decorative gradient, but never hides the
   video's pause control.
+- Shared chrome lives in `_partials/` and is fetched once per document by
+  `js/site.js`; per-page stylesheet or script tags break client-side navigation.
 
 ## Licence
 

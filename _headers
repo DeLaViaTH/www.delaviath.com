@@ -13,6 +13,9 @@
   #
   #   script-src  'unsafe-inline' — the projects page keeps one small inline
   #               filter script and the pages carry JSON-LD. Neither takes input.
+  #               static.cloudflareinsights.com — Cloudflare injects its Web
+  #               Analytics beacon into Pages responses. Without this entry the
+  #               beacon is blocked and every page logs a CSP violation.
   #   style-src   Google Fonts ships its @font-face rules from fonts.googleapis.com.
   #   frame-src   The hero background video is a YouTube embed. It only loads
   #               after the visitor presses play (js/hero-video.js), but it has
@@ -20,8 +23,10 @@
   #               privacy-friendly -nocookie host and the regular one are listed
   #               so switching hosts later does not silently break the hero.
   #   img-src     i.ytimg.com serves the player's own artwork/poster frames.
-  #   connect-src YouTube's player posts telemetry back to its own origin.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://www.youtube-nocookie.com; media-src 'self'; connect-src 'self' https://www.youtube-nocookie.com https://www.youtube.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  #   connect-src YouTube's player posts telemetry back to its own origin, and
+  #               the Cloudflare beacon posts its measurements to the same host
+  #               family it is served from.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://www.youtube-nocookie.com; media-src 'self'; connect-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://cloudflareinsights.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
 
 /assets/*
   # Filenames here are stable, not hashed, so revalidate rather than cache hard.

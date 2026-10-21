@@ -192,8 +192,15 @@ Cloudflare Pages builds straight from the `main` branch of
 [DeLaViaTH/www.delaviath.com](https://github.com/DeLaViaTH/www.delaviath.com).
 
 - **Project:** `www-delaviath-com`
-- **Build command:** *(none)*
-- **Build output directory:** `/`
+- **Build command:** `node tools/build.mjs`
+- **Build output directory:** `dist`
+- **Environment variable:** `NODE_VERSION=22`
+
+`tools/build.mjs` copies only what should be public into `dist/`; everything
+else in the repository (`tools/`, `README.md`, `.gitignore`) stays off the site.
+Leaving the output directory empty is what makes Pages publish the whole
+repository — `tools/cdp-router.mjs`, `README.md` and `.gitignore` all answered
+`200` that way.
 
 `_headers` and `_redirects` are picked up automatically. Old `/bmi` and
 `/bmi.html` links redirect to `/projects` — the calculator was removed.
@@ -206,17 +213,13 @@ whose production deployment is stale — push to Git and upload the site directl
 instead:
 
 ```sh
-git push origin main          # keep the repository truthful
-
-# Stage only what should be public; tools/, README and the build helpers
-# are not part of the site.
-mkdir -p dist
-cp -r index.html projects.html uses.html 404.html \
-      _headers _redirects robots.txt sitemap.xml LICENSE \
-      css js images assets _partials dist/
-
+git push origin main                       # keep the repository truthful
+node tools/build.mjs                       # stage dist/ — public files only
 npx wrangler pages deploy dist --project-name www-delaviath-com --branch main
 ```
+
+`node tools/build.mjs --check` exits non-zero when `dist/` is stale, so it is
+safe to gate a deploy on it.
 
 Deploy to a preview branch first (`--branch preview-test`) when you want the
 real edge to check a change before it reaches the production domain; the alias

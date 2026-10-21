@@ -10,5 +10,8 @@ Allow: /
 # Build/development leftovers, should never be indexed.
 Disallow: /_partials/
 Disallow: /_build_assets.py
+Disallow: /tools/
+Disallow: /README.md
+Disallow: /.gitignore
 
 Sitemap: https://www.delaviath.com/sitemap.xml

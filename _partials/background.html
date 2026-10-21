@@ -1,0 +1,38 @@
+<!--
+  Site-wide background video.
+
+  Injected into <div id="background-container"> by js/site.js so every page gets
+  exactly one copy. It is position:fixed, so it stays put as the page scrolls
+  instead of scrolling away with the hero.
+
+  Layer order, back to front:
+    1  .site-bg__wash   animated golden-hour gradient, pure CSS, no payload
+    2  .site-bg__video  the YouTube embed (muted, looping, autoplay)
+    3  .site-bg::after  contrast veil, keeps body text readable over the video
+
+  "Golden Hour" by BlueSkyWhaler, via youtube-nocookie.com.
+-->
+<div class="site-bg" aria-hidden="true">
+  <div class="site-bg__wash"></div>
+  <iframe class="site-bg__video" id="site-bg-video" title="Golden Hour by BlueSkyWhaler — background video"
+    src="https://www.youtube-nocookie.com/embed/JFfLAOSVlK8?autoplay=1&mute=1&loop=1&playlist=JFfLAOSVlK8&controls=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&enablejsapi=1&vq=hd1080&hd=1&fs=0&color=black"
+    loading="eager" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"
+    aria-hidden="true"></iframe>
+</div>
+
+<!--
+  Playback control. Fixed to the viewport and present on every page.
+  Deliberately NOT hidden under prefers-reduced-motion: hiding the only control
+  over a moving background is worse than showing it.
+-->
+<button class="site-bg__toggle" id="site-bg-toggle" type="button" aria-controls="site-bg-video" aria-pressed="true">
+  <span class="site-bg__toggle-icon" aria-hidden="true">
+    <svg class="site-bg__icon-pause" viewBox="0 0 24 24" focusable="false">
+      <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
+    </svg>
+    <svg class="site-bg__icon-play" viewBox="0 0 24 24" focusable="false">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  </span>
+  <span class="site-bg__toggle-label">Pause background</span>
+</button>

@@ -1,0 +1,14 @@
+# www.delaviath.com — robots.txt
+#
+# Previously this path returned index.html because there was no robots.txt and
+# Cloudflare Pages served the SPA fallback, which meant crawlers parsed HTML
+# where they expected plain text.
+
+User-agent: *
+Allow: /
+
+# Build/development leftovers, should never be indexed.
+Disallow: /_partials/
+Disallow: /_build_assets.py
+
+Sitemap: https://www.delaviath.com/sitemap.xml

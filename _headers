@@ -1,0 +1,37 @@
+# Cloudflare Pages headers — https://developers.cloudflare.com/pages/configuration/headers/
+#
+# The live site already sends HSTS + X-Content-Type-Options via Cloudflare, but
+# it was missing a Content-Security-Policy and a clickjacking defence.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  # Locked down to the origins the site actually uses.
+  #
+  #   script-src  'unsafe-inline' — the projects page keeps one small inline
+  #               filter script and the pages carry JSON-LD. Neither takes input.
+  #   style-src   Google Fonts ships its @font-face rules from fonts.googleapis.com.
+  #   frame-src   The hero background video is a YouTube embed. It only loads
+  #               after the visitor presses play (js/hero-video.js), but it has
+  #               to be allowed here or the iframe stays blank. Both the
+  #               privacy-friendly -nocookie host and the regular one are listed
+  #               so switching hosts later does not silently break the hero.
+  #   img-src     i.ytimg.com serves the player's own artwork/poster frames.
+  #   connect-src YouTube's player posts telemetry back to its own origin.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://i.ytimg.com https://www.youtube-nocookie.com; media-src 'self'; connect-src 'self' https://www.youtube-nocookie.com https://www.youtube.com; frame-src https://www.youtube-nocookie.com https://www.youtube.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+
+/assets/*
+  # Filenames here are stable, not hashed, so revalidate rather than cache hard.
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/images/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/css/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/js/*
+  Cache-Control: public, max-age=3600, must-revalidate

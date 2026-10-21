@@ -1,0 +1,19 @@
+# Cloudflare Pages redirects — https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# Problem this solves: the old site linked to /index.html and /../index.html.
+# Those resolved only because Pages falls back to serving index.html for every
+# unknown path — which also meant real 404s returned 200 ("soft 404") and every
+# URL had a duplicate .html twin.
+
+# One canonical URL per page (no .html suffix).
+/index.html          /                  301
+/projects.html       /projects          301
+/uses.html           /uses              301
+
+# The BMI calculator was removed. Send its old URLs to the projects page rather
+# than letting them 404, since it is still linked from old posts.
+/bmi                 /projects          301
+/bmi.html            /projects          301
+
+# Discord-era assets that used to be hotlinked.
+/discord/*           /                  301

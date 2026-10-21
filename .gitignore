@@ -1,0 +1,15 @@
+﻿# Local
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# Screenshot / debugging output from tools/
+_shots/
+
+# DSH project memory store
+.dsh-project-memory/
+
+# One-off asset builders
+_build_assets.py
+tools/build-og-image.py

@@ -10,8 +10,7 @@ no framework, no bundler, no build step.
 | Markup | Hand-written HTML5, one file per page |
 | Styling | Custom design system in `css/base.css` (~4 KB gzipped) |
 | Scripting | ES modules-free vanilla JS in `js/` |
-| Hosting | Cloudflare Pages (static) + Cloudflare Workers for the status page |
-| Monitoring | [status-page.delaviath.com](https://status-page.delaviath.com/) |
+| Hosting | Cloudflare Pages (static) |
 
 Bootstrap was removed in the current rebuild: it was pinned to `5.3.0-alpha1`,
 pulled 220 KB from `cdn.jsdelivr.net` before the page could render, and the site
